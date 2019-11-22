@@ -1,3 +1,4 @@
+import 'package:english_words/english_words.dart' as prefix0;
 import 'package:flutter/material.dart';
 import 'package:english_words/english_words.dart';
 
@@ -7,29 +8,54 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Welcome to Flutter',
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text('Welcome to Flutter'),
-        ),
-        body: Center(
-          child: RamdomWords(),
-        ),
-      ),
+      title: 'Startup Name Generator',
+      home: RandomWords(),
     );
   }
 }
 
-class RamdomWordsState extends State<RamdomWords>{
+class RandomWordsState extends State<RandomWords>{
+
+  final _suggestions = <WordPair>[];
+  final _biggeerFont = const TextStyle(fontSize: 18.0);
+
   @override
   Widget build(BuildContext context){
-    final wordPair = WordPair.random();
-    return Text(wordPair.asPascalCase);
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Startup Name Generator'),
+      ),
+      body: _buildSuggestions(),
+    );
+  }
+
+  Widget _buildSuggestions(){
+    return ListView.builder(
+      padding: const EdgeInsets.all(16.0),
+      itemBuilder: (context, i){
+        if(i.isOdd) return Divider();
+
+        final index = i ~/ 2;
+
+        if(index >= _suggestions.length){
+          _suggestions.addAll(generateWordPairs().take(10));
+        }
+        return _builRow(_suggestions[index]);
+      });
+  }
+
+  Widget _builRow(prefix0.WordPair pair){
+    return ListTile(
+      title: Text(
+        pair.asPascalCase,
+        style: _biggeerFont,
+      ),
+    );
   }
 
 }
 
-class RamdomWords extends StatefulWidget{
+class RandomWords extends StatefulWidget{
   @override
-  RamdomWordsState createState() => new RamdomWordsState();
+  RandomWordsState createState() => new RandomWordsState();
 }
